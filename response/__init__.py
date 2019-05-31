@@ -13,17 +13,20 @@ def get_response(req):
 def get_date(req):
   booking_date = req['queryResult']['outputContexts'][0]['parameters']['date']
   booking_date = booking_date[0:10]
-  if db.check_date(booking_date):
-    response_obj = [{"text": {"text": ["The time slot your looking for ?"]}},{"card": {"title": "The time slot your looking for ?","buttons": []},"platform": "TELEGRAM"}]
-    if db.free_slot1(booking_date):
-      response_obj[1]['card']['buttons'].append({ "text" : "5PM-6PM" })
-    if db.free_slot2(booking_date):
-      response_obj[1]['card']['buttons'].append({ "text" : "6PM-7PM" })
-    if db.free_slot3(booking_date):
-      response_obj[1]['card']['buttons'].append({ "text" : "7PM-8PM" })
-    return response_obj
-  else:
-    return [{"text": {"text": ["Every slots are filled in the mentioned date, can you try someother day ?"]}},{"text": {"text": ["Every slots are filled in the mentioned date, can you try someother day ?"]},"platform": "TELEGRAM"}]
+  try:
+    if db.check_date(booking_date):
+      response_obj = [{"text": {"text": ["The time slot your looking for ?"]}},{"card": {"title": "The time slot your looking for ?","buttons": []},"platform": "TELEGRAM"}]
+      if db.free_slot1(booking_date):
+        response_obj[1]['card']['buttons'].append({ "text" : "5PM-6PM" })
+      if db.free_slot2(booking_date):
+        response_obj[1]['card']['buttons'].append({ "text" : "6PM-7PM" })
+      if db.free_slot3(booking_date):
+        response_obj[1]['card']['buttons'].append({ "text" : "7PM-8PM" })
+      return response_obj
+    else:
+      return [{"text": {"text": ["Every slots are filled in the mentioned date, can you try someother day ?"]}},{"text": {"text": ["Every slots are filled in the mentioned date, can you try someother day ?"]},"platform": "TELEGRAM"}]
+  except ConnectionError:
+    return [{"text": {"text": ["Sorry something went wrong. Try again later."]}},{"text": {"text": ["Sorry something went wrong. Try again later."]},"platform": "TELEGRAM"}]
 
 def get_timeslots(req):
   booking_date = req['queryResult']['outputContexts'][1]['parameters']['date']
@@ -36,11 +39,14 @@ def get_timeslots(req):
   slots = ['slot1', 'slot2', 'slot3']
   time_period = [5,6,7]
   slot = slots[time_period.index(start_time)]
-  if db.free_time1(booking_date, slot):
-    response_obj[1]['card']['buttons'].append({ "text" : "{0}".format(time_slot1) })
-  if db.free_time2(booking_date, slot):
-    response_obj[1]['card']['buttons'].append({ "text" : "{0}".format(time_slot2) })
-  return response_obj
+  try:
+    if db.free_time1(booking_date, slot):
+      response_obj[1]['card']['buttons'].append({ "text" : "{0}".format(time_slot1) })
+    if db.free_time2(booking_date, slot):
+      response_obj[1]['card']['buttons'].append({ "text" : "{0}".format(time_slot2) })
+    return response_obj
+  except ConnectionError:
+    return [{"text": {"text": ["Sorry something went wrong. Try again later."]}},{"text": {"text": ["Sorry something went wrong. Try again later."]},"platform": "TELEGRAM"}]
 
 def get_time(req):
   booking_date = req['queryResult']['outputContexts'][1]['parameters']['date']
@@ -51,8 +57,11 @@ def get_time(req):
   slot = slots[time_period.index(int(booking_time[11:13])-12)]
   timings = [0,30]
   time_slot = timings.index(int(booking_time[14:16]))
-  db.book_table(booking_date, time_slot, slot)
-  return [{"text": {"text": ["Can I have your Email Id for confirming your reservation!"]}},{"text": {"text": ["Can I have your Email Id for confirming your reservation!"]},"platform": "TELEGRAM"}]
+  try:
+    db.book_table(booking_date, time_slot, slot)
+    return [{"text": {"text": ["Can I have your Email Id for confirming your reservation!"]}},{"text": {"text": ["Can I have your Email Id for confirming your reservation!"]},"platform": "TELEGRAM"}]
+  except ConnectionError:
+    return [{"text": {"text": ["Sorry something went wrong. Try again later."]}},{"text": {"text": ["Sorry something went wrong. Try again later."]},"platform": "TELEGRAM"}]
 
 def get_email():
   return [{"text": {"text": ["Do you have any special event ?"]}},{"text": {"text": ["Do you have any special event ?"]},"platform": "TELEGRAM"}]
@@ -67,15 +76,19 @@ def get_event_note(req):
   booking_email = req['queryResult']['outputContexts'][1]['parameters']['email']
   booking_date = booking_date[0:10]
   booking_time = booking_time[11:16]
-  db.book_note(booking_date, booking_time, booking_note)
-  special_event = True
-  background_process(booking_date, booking_time, booking_email, special_event)
-  return [{"text": {"text": ["Reservation is completed successfully for your special event and confirmation will be send to your mail"]}},{"text": {"text": ["Reservation is completed successfully for your special event and confirmation will be send to your mail"]},"platform": "TELEGRAM"}]
+  try:
+    db.book_note(booking_date, booking_time, booking_note)
+    special_event = True
+    background_process(booking_date, booking_time, booking_email, special_event)
+    return [{"text": {"text": ["Reservation is completed successfully for your special event and confirmation will be send to your mail"]}},{"text": {"text": ["Reservation is completed successfully for your special event and confirmation will be send to your mail"]},"platform": "TELEGRAM"}]
+  except ConnectionError:
+    return [{"text": {"text": ["Sorry something went wrong. Try again later."]}},{"text": {"text": ["Sorry something went wrong. Try again later."]},"platform": "TELEGRAM"}]
 
 def get_event_negative_response(req):
   booking_date = req['queryResult']['outputContexts'][1]['parameters']['date']
   booking_time = req['queryResult']['outputContexts'][1]['parameters']['time']
   booking_email = req['queryResult']['outputContexts'][1]['parameters']['email']
   special_event = False
-  background_process(booking_date, booking_time, booking_email, special_event)
-  return [{"text": {"text": ["Reservation is completed successfully and confirmation will be send to your mail"]}},{"text": {"text": ["Reservation is completed successfully and confirmation will be send to your mail"]},"platform": "TELEGRAM"}]
+  try:
+    background_process(booking_date, booking_time, booking_email, special_event)
+    return [{"text": {"text": ["Reservation is completed successfully and confirmation will be send to your mail"]}},{"text": {"text": ["Reservation is completed successfully and confirmation will be send to your mail"]},"platform": "TELEGRAM"}]
