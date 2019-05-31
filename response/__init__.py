@@ -63,12 +63,6 @@ def get_time(req):
   except ConnectionError:
     return [{"text": {"text": ["Sorry something went wrong. Try again later."]}},{"text": {"text": ["Sorry something went wrong. Try again later."]},"platform": "TELEGRAM"}]
 
-def get_email():
-  return [{"text": {"text": ["Do you have any special event ?"]}},{"text": {"text": ["Do you have any special event ?"]},"platform": "TELEGRAM"}]
-
-def get_event_positive_response():
-  return [{"text": {"text": ["Mention your special event note"]}},{"text": {"text": ["Mention your special event note"]},"platform": "TELEGRAM"}]
-
 def get_event_note(req):
   booking_note = req['queryResult']['queryText']
   booking_date = req['queryResult']['outputContexts'][1]['parameters']['date']

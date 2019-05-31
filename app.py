@@ -13,35 +13,29 @@ def results():
 
 	if action == 'get_response':
 		response = get_response(req)
-		return { "fulfillmentMessages" : response }
-	
+
 	elif action == 'get_date':
 		response = get_date(req)
-		return { "fulfillmentMessages" : response }
-
+		
 	elif action == 'get_timeslots':
 		response = get_timeslots(req)
-		return { "fulfillmentMessages" : response }
-	
+		
 	elif action == 'get_time':
 		response = get_time(req)
-		return { "fulfillmentMessages" : response }
-
+		
 	elif action == 'get_email':
 		response = get_email()
-		return { "fulfillmentMessages" : response }
-
+		
 	elif action == 'get_event_positive_response':
 		response = get_event_positive_response()
-		return { "fulfillmentMessages" : response }
-
+		
 	elif action == 'get_event_note':
 		response = get_event_note(req)
-		return { "fulfillmentMessages" : response }
-
+		
 	elif action == 'get_event_negative_response':
 		response = get_event_negative_response(req)
-		return { "fulfillmentMessages" : response }
+
+	return { "fulfillmentMessages" : response }
 		
 if __name__ == '__main__':
   app.run()
