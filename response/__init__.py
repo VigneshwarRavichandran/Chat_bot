@@ -92,3 +92,5 @@ def get_event_negative_response(req):
   try:
     background_process(booking_date, booking_time, booking_email, special_event)
     return [{"text": {"text": ["Reservation is completed successfully and confirmation will be send to your mail"]}},{"text": {"text": ["Reservation is completed successfully and confirmation will be send to your mail"]},"platform": "TELEGRAM"}]
+  except Exception:
+    return [{"text": {"text": ["Sorry something went wrong. Try again later."]}},{"text": {"text": ["Sorry something went wrong. Try again later."]},"platform": "TELEGRAM"}]

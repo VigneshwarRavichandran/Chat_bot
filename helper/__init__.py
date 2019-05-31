@@ -10,13 +10,16 @@ from email.mime.text import MIMEText
 import datetime
 
 def background_process(booking_date, booking_time, booking_email, special_event):
-	scheduler = Scheduler(connection=Redis()) # Get a scheduler for the "default" queue
-	year = int(booking_date[0:4])
-	month = int(booking_date[5:7])
-	day = int(booking_date[8:10])
-	send_time = dt.datetime(year, month, day, 16, 0, 0)
-	delay_time = int(send_time.timestamp() - time.time())
-	job = scheduler.schedule(scheduled_time=datetime.datetime.utcnow(), func=send_email, args=[booking_date, booking_time, booking_email, special_event], repeat=2, interval=delay_time)
+	try:
+		scheduler = Scheduler(connection=Redis()) # Get a scheduler for the "default" queue
+		year = int(booking_date[0:4])
+		month = int(booking_date[5:7])
+		day = int(booking_date[8:10])
+		send_time = dt.datetime(year, month, day, 16, 0, 0)
+		delay_time = int(send_time.timestamp() - time.time())
+		job = scheduler.schedule(scheduled_time=datetime.datetime.utcnow(), func=send_email, args=[booking_date, booking_time, booking_email, special_event], repeat=2, interval=delay_time)
+	except:
+		raise Exception()
 
 def send_email(booking_date, booking_time, booking_email, special_event):
 	smtp_ssl_host = 'smtp.gmail.com'
