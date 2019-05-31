@@ -29,9 +29,9 @@ def send_email(booking_date, booking_time, booking_email, special_event):
 	booking_date = booking_date[0:10]
 	booking_time = booking_time[11:16]
 	if special_event:
-		booking_msg = booking_msg+'Your have reserved a table on {0} during {1} for your special event. Foodiee restaurant is eagerly waiting for your presence.'.format(booking_date, booking_time)
+		booking_msg += 'Your have reserved a table on {0} during {1} for your special event. Foodiee restaurant is eagerly waiting for your presence.'.format(booking_date, booking_time)
 	else:
-		booking_msg = booking_msg+'Your have reserved a table on {0} during {1}. Foodiee restaurant is eagerly waiting for your presence.'.format(booking_date, booking_time)
+		booking_msg += 'Your have reserved a table on {0} during {1}. Foodiee restaurant is eagerly waiting for your presence.'.format(booking_date, booking_time)
 	msg = MIMEText(booking_msg)
 	msg['Subject'] = 'FOODIEE RESTAURANT RESERVATION'
 	msg['From'] = sender
