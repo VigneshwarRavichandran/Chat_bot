@@ -37,26 +37,6 @@ class RestaurantDb():
       return True
     return False
 
-  # get the free timings in the time_slots
-  # def free_time(self, booking_date, start_time):
-  #   cur = self.conn.cursor()
-  #   start_time = int(start_time[11:13])-12
-  #   booking_date = booking_date[0:10]
-  #   time_slot1 = str(start_time)+':00 PM'
-  #   time_slot2 = str(start_time)+':30 PM'
-  #   response_obj = [{"text": {"text": ["The time your looking for ?"]}},{"card": {"title": "The time your looking for ?","buttons": []},"platform": "TELEGRAM"}]
-  #   slots = ['slot1', 'slot2', 'slot3']
-  #   time_period = [5,6,7]
-  #   slot = slots[time_period.index(start_time)]
-  #   # check whether the timing is free
-  #   time1 = cur.execute("SELECT * FROM booking WHERE date = '{0}' AND JSON_EXTRACT({1}, '$[0]')".format(booking_date, slot))
-  #   time2 = cur.execute("SELECT * FROM booking WHERE date = '{0}' AND JSON_EXTRACT({1}, '$[1]')".format(booking_date, slot))
-  #   if time1 != 0:
-  #     response_obj[1]['card']['buttons'].append({ "text" : "{0}".format(time_slot1) })
-  #   if time2 != 0:
-  #     response_obj[1]['card']['buttons'].append({ "text" : "{0}".format(time_slot2) })
-  #   return response_obj
-
   def free_time1(self, booking_date, slot):
     cur = self.conn.cursor()
     result = cur.execute("SELECT * FROM booking WHERE date = '{0}' AND JSON_EXTRACT({1}, '$[0]')".format(booking_date, slot))
